@@ -15,8 +15,11 @@ export class UserService {
     return this.userRepository.save({ name: createUserDto.name });
   }
 
-  findAll() {
-    return this.userRepository.find();
+  async findAll(page?: number) {
+    const take = 100;
+    const skip = page * 100 - 100
+
+    return await this.userRepository.find({skip, take});
   }
 
   async findOne(id: string) {

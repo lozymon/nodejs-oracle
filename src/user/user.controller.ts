@@ -5,11 +5,14 @@ import {
   Body,
   Patch,
   Param,
+  Query,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserDto } from './dto/user.dto';
 
 @Controller('user')
 export class UserController {
@@ -21,8 +24,9 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query() params: UserDto, @Req() req: Request) {
+    const page = params.page || 0;
+    return this.userService.findAll(+page);
   }
 
   @Get(':id')
