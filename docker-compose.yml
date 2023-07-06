@@ -1,0 +1,40 @@
+services:
+  oracledb:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    env_file:
+      - .env
+    volumes:
+      - ./database_script:/opt/oracle/scripts/startup
+      - oradata:/opt/oracle/oradata
+    ports:
+      - 1521:1521
+      - 5500:5500
+    networks:
+      - orc-network
+
+  server:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    volumes:
+      - ./src:/app/src
+    env_file:
+      - .env
+    command: npm run start:dev
+    links:
+      - oracledb
+    depends_on:
+      - oracledb
+    ports:
+      - 4000:3000
+    networks:
+      - orc-network
+
+volumes:
+  oradata:
+    driver: local
+
+networks:
+  orc-network:
+    driver: bridge
