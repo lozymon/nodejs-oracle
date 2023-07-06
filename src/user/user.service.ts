@@ -4,22 +4,26 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { IPaginationMeta, IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly config: ConfigService,
   ) {}
 
   create(createUserDto: CreateUserDto) {
     return this.userRepository.save({ name: createUserDto.name });
   }
 
-  async findAll(page?: number) {
-    const take = 100;
-    const skip = page * 100 - 100
+  async findAll(paginationOptions: IPaginationOptions): Promise<Pagination<User>> {
+    const options = this.validatePaginationOptions(paginationOptions);
 
-    return await this.userRepository.find({skip, take});
+    return paginate<User>(this.userRepository, options, {
+      order: { name: 'ASC' },
+    });
   }
 
   async findOne(id: string) {
@@ -39,5 +43,19 @@ export class UserService {
   async remove(id: string) {
     const user = await this.findOne(id);
     return this.userRepository.remove(user);
+  }
+
+  private validatePaginationOptions({ page, limit }: IPaginationOptions) {
+    let maxLimit = this.config.get('PAGINATION_MAX_LIMIT') || 100;
+
+    if (limit && +limit <= 100) {
+      maxLimit = limit;
+    }
+
+    return {
+      page,
+      limit: maxLimit,
+      route: this.config.get('DOMINE'),
+    } satisfies IPaginationOptions<IPaginationMeta>;
   }
 }
