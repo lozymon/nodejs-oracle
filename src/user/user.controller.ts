@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
@@ -19,12 +19,14 @@ export class UserController {
 
   @Get()
   @ApiOkResponse()
+  @ApiResponse({ status: 429, description: 'ThrottlerException: Too Many Requests' })
   findAll(@Query() params: UserDto) {
     return this.userService.findAll(params);
   }
 
   @Get(':id')
   @ApiOkResponse({ type: User })
+  @ApiResponse({ status: 429, description: 'ThrottlerException: Too Many Requests' })
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
