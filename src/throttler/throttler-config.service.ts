@@ -12,9 +12,7 @@ export class ThrottlerConfigService implements ThrottlerOptionsFactory {
     const config = {
       ttl: this.env(this.THROTTLE_TTL),
       limit: this.env(this.THROTTLE_LIMIT),
-    };
-
-    console.log(config);
+    } satisfies ThrottlerModuleOptions;
 
     return config;
   }

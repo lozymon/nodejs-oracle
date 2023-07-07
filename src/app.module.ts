@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from './config-service/type-orm-config.service';
-import { UserModule } from './user/user.module';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { ThrottlerConfigService } from './config-service/throttler-config.service';
 import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerBehindProxyGuard } from './throttler/throttler-behind-proxy.guard';
+import { ThrottlerConfigService } from './throttler/throttler-config.service';
+import { TypeOrmConfigService } from './type-orm/type-orm-config.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { APP_GUARD } from '@nestjs/core';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
+      useClass: ThrottlerBehindProxyGuard,
     },
   ],
 })
