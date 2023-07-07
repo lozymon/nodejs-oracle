@@ -6,9 +6,11 @@ When running docker compose it will start an oracle database and a nestjs projec
 
 ## TODO
 
+- [x] oracle
+- [x] swagger
+- [x] throttling
 - [ ] cache
 - [ ] auth
-- [ ] throttling
 
 ## Libs
 
