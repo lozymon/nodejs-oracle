@@ -1,17 +1,18 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import swaggerConfig from './config/swagger.config';
 
 export function bootstrapSwagger(app: INestApplication) {
-  if (!Boolean(process.env.SWAGGER)) {
+  if (!swaggerConfig.show) {
     return;
   }
 
   const config = new DocumentBuilder()
-    .setTitle(process.env.SWAGGER_TITLE)
-    .setDescription(process.env.SWAGGER_DESCRIPTION)
-    .setVersion(process.env.SWAGGER_VERSION)
+    .setTitle(swaggerConfig.title)
+    .setDescription(swaggerConfig.description)
+    .setVersion(swaggerConfig.version)
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(process.env.SWAGGER_PATH, app, document);
+  SwaggerModule.setup(swaggerConfig.path, app, document);
 }

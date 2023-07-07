@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { IPaginationMeta, IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { ConfigService } from '@nestjs/config';
+import paginationConfig from 'src/config/pagination.config';
 
 @Injectable()
 export class UserService {
@@ -46,7 +47,7 @@ export class UserService {
   }
 
   private validatePaginationOptions({ page, limit }: IPaginationOptions) {
-    let maxLimit = this.config.get('PAGINATION_MAX_LIMIT') || 100;
+    let maxLimit = paginationConfig.maxLimit;
 
     if (limit && +limit <= 100) {
       maxLimit = limit;
