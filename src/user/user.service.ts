@@ -56,7 +56,7 @@ export class UserService {
     return {
       page,
       limit: maxLimit,
-      route: this.config.get('DOMINE'),
+      route: this.config.get('DOMAIN'),
     } satisfies IPaginationOptions<IPaginationMeta>;
   }
 }

@@ -2,7 +2,7 @@ services:
   oracledb:
     image: container-registry.oracle.com/database/express:21.3.0-xe
     env_file:
-      - .env
+      - .env.oracle
     volumes:
       - ./database_script:/opt/oracle/scripts/startup
       - oradata:/opt/oracle/oradata
